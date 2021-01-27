@@ -35,9 +35,11 @@ public class Set {
 	 */
 	public Set(List<Integer> elements) throws SetElementValueOutOfRange {
 		for (int i = 0; i < elements.size(); ++i) {
-			s = (long) (s | (1 << elements.get(i)));
+			if (elements.get(i) <= MAX_SET_ELEMENT_VALUE && elements.get(i) >= 0)
+				s = (long) (s | (1 << elements.get(i)));
+			else
+				throw new SetElementValueOutOfRange();
 		}
-		// TODO: Handle when values exceed 63
 	}
 
 	public boolean isInSet(int x) {
