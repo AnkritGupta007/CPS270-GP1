@@ -58,11 +58,23 @@ public class Set {
 	 * @throws SetElementValueOutOfRange
 	 */
 	public void addElement(int x) throws SetElementValueOutOfRange {
-
+		if (x <= MAX_SET_ELEMENT_VALUE && x >= 0)
+			s = (long) (s | (1 << x));
+		else
+			throw new SetElementValueOutOfRange();
 	}
 
+	/**
+	 * Removes an element to the set.
+	 * 
+	 * @param x The identifier of the element to remove. Must be in the range of 0 to 63.
+	 * @throws SetElementValueOutOfRange
+	 */
 	public void removeElement(int x) throws SetElementValueOutOfRange {
-
+		if (x <= MAX_SET_ELEMENT_VALUE && x >= 0)
+			s = (long) (s & ~(1 << x));
+		else
+			throw new SetElementValueOutOfRange();
 	}
 
 	public Set intersection(Set s) {
