@@ -11,6 +11,10 @@ import java.util.List;
  * @author [list the globalID of contributing members of the group here]
  *
  */
+/**
+ * @author gupta4a
+ *
+ */
 public class Set {
 
 	public static final int MAX_SET_ELEMENT_VALUE = 63;
@@ -42,21 +46,32 @@ public class Set {
 	 * @throws SetElementValueOutOfRange
 	 */
 	public Set(List<Integer> elements) throws SetElementValueOutOfRange {
+		int element;
 		for (int i = 0; i < elements.size(); ++i) {
-			if (elements.get(i) <= MAX_SET_ELEMENT_VALUE && elements.get(i) >= 0)
-				s = (long) (s | (1 << elements.get(i)));
+			element = elements.get(i);
+			if (element <= MAX_SET_ELEMENT_VALUE && element >= 0)
+				s = (long) (s | (1l << elements.get(i)));
 			else
 				throw new SetElementValueOutOfRange();
 		}
 	}
 
+	/**
+	 * checks if the element is in the set
+	 * @param x integer element to be checked if its present in the sate or not 
+	 * @return boolean true if the element is present, otherwise returns false
+	 */
 	public boolean isInSet(int x) {
-
-		return false;
+		long mask =  (1l<<x);
+		
+		if((mask |this.s) == mask) {
+			return true;
+		}
+		return false; 
 	}
 
 	public void empty() {
-
+		this.s = 0l; 
 	}
 
 	/**
@@ -67,7 +82,7 @@ public class Set {
 	 */
 	public void addElement(int x) throws SetElementValueOutOfRange {
 		if (x <= MAX_SET_ELEMENT_VALUE && x >= 0) {
-			s = (long) (s | (1 << x));
+			s = (long) (s | (1l << x));
 			System.out.println(this.s);
 		}
 		else
@@ -82,11 +97,17 @@ public class Set {
 	 */
 	public void removeElement(int x) throws SetElementValueOutOfRange {
 		if (x <= MAX_SET_ELEMENT_VALUE && x >= 0)
-			s = (long) (s & ~(1 << x));
+			s = (long) (s & ~(1l << x));
 		else
 			throw new SetElementValueOutOfRange();
 	}
-
+	
+	
+	/**
+	 * finds the intersection between this Set with a given Set
+	 * @param s Set that is given to find the intersection with this Set.
+	 * @return Set representing the intersection of this Set and s Set. 
+	 */
 	public Set intersection(Set s) {
 
 		Set result=new Set();
@@ -96,7 +117,12 @@ public class Set {
 		return s; 
 
 	}
-
+	
+	/**
+	 * finds the union between this Set with a given Set
+	 * @param s Set that is given to find the union with this Set.
+	 * @return Set representing the union of this Set and s Set. 
+	 */
 	public Set union(Set s) {
 
 		Set result=new Set();
@@ -113,20 +139,33 @@ public class Set {
 
 	public boolean isEmpty() {
 
-		return false;
+		if(this.s==0l) {
+			return true;
+		}
+		return false; 
 	}
 
+	/**
+	 * @return Integer representing the number of elements in the set. 
+	 */
 	public int size() {
 
 		return 0;
 
 	}
 
+	/**
+	 * complements this Set.
+	 */
 	public void complement() {
 		this.s = (long) ~(s);
-
-
 	}
+	
+	
+	
+	
+	
+	//helper methods. 
 
 	public static String byteToString(byte b) {
 		byte[] masks = { -128, // 1000 0000 

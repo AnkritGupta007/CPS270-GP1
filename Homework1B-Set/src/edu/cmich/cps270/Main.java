@@ -11,8 +11,14 @@ public class Main {
 //		s.addElement(1);
 		s.addElement(62);
 //		s.addElement(45);
-//		s.addElement(31);
+		s.addElement(63);
+		
 		byte[] array= s.toByteArray(s.getS()) ;
+	
+		
+		System.out.println(s.byteToString(array)); 
+		s.removeElement(63);
+		array= s.toByteArray(s.getS()) ;
 	
 		
 		System.out.println(s.byteToString(array));
