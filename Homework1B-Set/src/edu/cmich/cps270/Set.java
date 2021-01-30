@@ -8,23 +8,27 @@ import java.util.List;
  * are supported such as adding and removing elements, union, intersection and
  * complement.
  * 
- * @author [list the globalID of contributing members of the group here]
- *
+ * @author gupta4a, stjoh1sr
+ * @since 30 JANUARY 2021
  */
-/**
- * @author gupta4a
- *
- */
+
 public class Set {
 
 	public static final int MAX_SET_ELEMENT_VALUE = 63;
-
 	private long s; // The long used to represent a set
 
+	/**
+	 * Fetches s, a long representation of a Set
+	 * @return the Set stored in a long format
+	 */
 	public long getS() {
 		return s;
 	}
-
+	
+	/**
+	 * Manually sets a long to represent a Set.
+	 * @param s the long representation of a Set
+	 */
 	public void setS(long s) {
 		this.s = s;
 	}
@@ -46,9 +50,18 @@ public class Set {
 	 * @throws SetElementValueOutOfRange
 	 */
 	public Set(List<Integer> elements) throws SetElementValueOutOfRange {
-		int element;
+		int element; // The placeholder variable for adding elements into the Set
+		
+		// Looping through every element in the list of Integers
 		for (int i = 0; i < elements.size(); ++i) {
+			// Retrieving the i-th element
 			element = elements.get(i);
+			
+			/* Checking if element is in range; if so, then adding the element to the Set
+			 * by shifting a mask for element n the right n times and using bitwise OR.
+			 * 
+			 * If not in range, throwing an Exception.
+			 */
 			if (element <= MAX_SET_ELEMENT_VALUE && element >= 0)
 				s = (long) (s | (1l << elements.get(i)));
 			else
@@ -57,30 +70,39 @@ public class Set {
 	}
 
 	/**
-	 * checks if the element is in the set
-	 * @param x integer element to be checked if its present in the sate or not 
-	 * @return boolean true if the element is present, otherwise returns fal se
+	 * Checks if the element is in the Set.
+	 * @param x integer element to be checked if its present in the Set or not 
+	 * @return boolean true if the element is present, otherwise returns false
 	 */
 	public boolean isInSet(int x) {
-		long mask =  (1l<<x);
-
+		long mask =  (1l << x); // A mask that holds a '1' at the x-th place in binary
+		
+		// Using a bitwise AND via the mask to check if the element is in the Set
 		if((mask & this.s) == mask) {
 			return true;
 		}
 		return false; 
 	}
-
+	
+	/**
+	 * Removes all elements from the Set by setting every bit to '0'.
+	 */
 	public void empty() {
 		this.s = 0l; 
 	}
 
 	/**
-	 * Adds an element to the set.
+	 * Adds an element to the Set.
 	 * 
-	 * @param x The identifier of the element to add. Must be in the range of 0 to 63.
+	 * @param x The identifier of the element to add. Must be in the range of 0 to 63
 	 * @throws SetElementValueOutOfRange
 	 */
 	public void addElement(int x) throws SetElementValueOutOfRange {
+		/* Checking if element is in range; if so, then removing the element from the Set
+		 * by shifting a mask for element n the right n times and using bitwise AND.
+		 * 
+		 * If not in range, throwing an Exception.
+		 */
 		if (x <= MAX_SET_ELEMENT_VALUE && x >= 0) {
 			s = (long) (s | (1l << x));
 		}
@@ -89,9 +111,9 @@ public class Set {
 	}
 
 	/**
-	 * Removes an element to the set.
+	 * Removes an element of the Set.
 	 * 
-	 * @param x The identifier of the element to remove. Must be in the range of 0 to 63.
+	 * @param x The identifier of the element to remove. Must be in the range of 0 to 63
 	 * @throws SetElementValueOutOfRange
 	 */
 	public void removeElement(int x) throws SetElementValueOutOfRange {
@@ -101,82 +123,96 @@ public class Set {
 			throw new SetElementValueOutOfRange();
 	}
 
-
 	/**
-	 * finds the intersection between this Set with a given Set
-	 * @param s Set that is given to find the intersection with this Set.
-	 * @return Set representing the intersection of this Set and s Set. 
+	 * Finds the intersection between this Set with a given Set.
+	 * @param s Set that is given to find the intersection with this Set
+	 * @return Set representing the intersection of this Set and s Set
 	 */
 	public Set intersection(Set s) {
+		Set result = new Set(); // The Set that will represent intersection
 
-		Set result=new Set();
-
-		result.s =(long) (this.s & s.s);
+		// Using a bitwise AND to find when an element exists in both Sets
+		result.s = (long) (this.s & s.s);
 
 		return result; 
 
 	}
 
 	/**
-	 * finds the union between this Set with a given Set
-	 * @param s Set that is given to find the union with this Set.
-	 * @return Set representing the union of this Set and s Set. 
+	 * Finds the union between this Set with a given Set.
+	 * @param s Set that is given to find the union with this Set
+	 * @return Set representing the union of this Set and s Set 
 	 */
 	public Set union(Set s1) {
-
-		Set result=new Set();
-
-		result.setS( (long) (this.s | s1.getS()));
+		Set result = new Set(); // The Set that will represent a union
+		
+		// Using a bitwise OR to find when an element exists in one or both Set(s)
+		result.setS((long)(this.s | s1.getS()));
 
 		return result; 
 	}
-
+	
+	/**
+	 * Creates a List form representation of a Set
+	 * @return a List of Integers that holds in the elements in a Set
+	 */
 	public List<Integer> toList() {
-		List<Integer> list =new ArrayList<>();
-		long mask= 1l;
-		for(int i=0 ; i<64 ;i++) {
-			mask = (long)1l<<i ; 
+		List<Integer> list = new ArrayList<>(); // The List to represent a Set
+		long mask = 1l; // The mask to use for checking if an element is in Set
+		
+		/* Looping through each binary digit of the long Set to add to the List.
+		 * If the digit is in the Set, it is added to the List.
+		 */
+		for (int i = 0 ; i < 64; i++) {
+			mask = (long)(1l << i);
+			
 			if((mask  & this.s) == mask) {
 				list.add(i);
 			}
 		}
+		
 		return list;
 	}
-
+	
+	/**
+	 * Checks if the Set is empty; that is that all its binary digits are '0'.
+	 * @return true if the Set equals the long 0l, false if it does not
+	 */
 	public boolean isEmpty() {
 
-		if(this.s==0l) {
+		if(this.s == 0l) {
 			return true;
 		}
+		
 		return false; 
 	}
 
 	/**
-	 * @return Integer representing the number of elements in the set. 
+	 * Calculates the number of elements in a Set.
+	 * @return Integer representing the number of elements in the Set
 	 */
 	public int size() {
-		int count =0;
-		long mask= 1l;
-		for(int i=0 ; i<64 ;i++) {
-			mask = (long)1l<<i ; 
-			if((mask  &this.s) == mask) {
+		int count = 0; // The number of elements in a Set
+		long mask = 1l; // The mask to be used to test if an element exists in the set
+		
+		// Looping through every possible element in the set and counting existing elements
+		for(int i = 0 ; i < 64; i++) {
+			mask = (long)(1l << i); 
+			
+			if((mask & this.s) == mask) {
 				count++;
 			}
 		}
+		
 		return count;
-
 	}
 
 	/**
-	 * complements this Set.
+	 * Complements this Set
 	 */
 	public void complement() {
 		this.s = (long) ~(s);
 	}
-
-
-
-
 
 	//helper methods. 
 
@@ -226,8 +262,6 @@ public class Set {
 	 * @param s A short, signed integer to convert
 	 * @return A byte array for the two bytes that make up the short
 	 */
-
-
 	public  byte[] toByteArray(long l) {
 		byte[] b = new byte[8];
 		for(int i= 0; i < 8; i++){
@@ -258,4 +292,3 @@ public class Set {
 
 
 }
-
