@@ -1,6 +1,7 @@
 package edu.cmich.cps270;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,12 +60,12 @@ public class Set {
 	/**
 	 * checks if the element is in the set
 	 * @param x integer element to be checked if its present in the sate or not 
-	 * @return boolean true if the element is present, otherwise returns false
+	 * @return boolean true if the element is present, otherwise returns fal se
 	 */
 	public boolean isInSet(int x) {
 		long mask =  (1l<<x);
-		
-		if((mask |this.s) == mask) {
+
+		if((mask & this.s) == mask) {
 			return true;
 		}
 		return false; 
@@ -83,7 +84,6 @@ public class Set {
 	public void addElement(int x) throws SetElementValueOutOfRange {
 		if (x <= MAX_SET_ELEMENT_VALUE && x >= 0) {
 			s = (long) (s | (1l << x));
-			System.out.println(this.s);
 		}
 		else
 			throw new SetElementValueOutOfRange();
@@ -101,8 +101,8 @@ public class Set {
 		else
 			throw new SetElementValueOutOfRange();
 	}
-	
-	
+
+
 	/**
 	 * finds the intersection between this Set with a given Set
 	 * @param s Set that is given to find the intersection with this Set.
@@ -114,27 +114,34 @@ public class Set {
 
 		result.s =(long) (this.s & s.s);
 
-		return s; 
+		return result; 
 
 	}
-	
+
 	/**
 	 * finds the union between this Set with a given Set
 	 * @param s Set that is given to find the union with this Set.
 	 * @return Set representing the union of this Set and s Set. 
 	 */
-	public Set union(Set s) {
+	public Set union(Set s1) {
 
 		Set result=new Set();
 
-		result.s =(long) (this.s | s.s);
+		result.setS( (long) (this.s | s1.getS()));
 
-		return s; 
+		return result; 
 	}
 
 	public List<Integer> toList() {
-
-		return null;
+		List<Integer> list =new ArrayList<>();
+		long mask= 1l;
+		for(int i=0 ; i<64 ;i++) {
+			mask = (long)1l<<i ; 
+			if((mask  & this.s) == mask) {
+				list.add(i);
+			}
+		}
+		return list;
 	}
 
 	public boolean isEmpty() {
@@ -149,8 +156,15 @@ public class Set {
 	 * @return Integer representing the number of elements in the set. 
 	 */
 	public int size() {
-
-		return 0;
+		int count =0;
+		long mask= 1l;
+		for(int i=0 ; i<64 ;i++) {
+			mask = (long)1l<<i ; 
+			if((mask  &this.s) == mask) {
+				count++;
+			}
+		}
+		return count;
 
 	}
 
@@ -160,14 +174,14 @@ public class Set {
 	public void complement() {
 		this.s = (long) ~(s);
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	//helper methods. 
 
-	public static String byteToString(byte b) {
+	public  String byteToString(byte b) {
 		byte[] masks = { -128, // 1000 0000 
 				64, // 0100 0000
 				32, // 0010 0000
@@ -197,7 +211,7 @@ public class Set {
 	 * @param bytes an array of bytes to be converted to a string
 	 * @return string representation of the bits in the provided byte array
 	 */
-	public static String byteToString(byte[] bytes) {
+	public  String byteToString(byte[] bytes) {
 		StringBuilder builder = new StringBuilder();
 
 		for(byte b: bytes) {
@@ -215,7 +229,7 @@ public class Set {
 	 */
 
 
-	public static byte[] toByteArray(long l) {
+	public  byte[] toByteArray(long l) {
 		byte[] b = new byte[8];
 		for(int i= 0; i < 8; i++){
 			b[7 - i] = (byte)(l >>> (i * 8));
